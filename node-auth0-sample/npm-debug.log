@@ -18,7 +18,7 @@
 9 verbose stack     at maybeClose (internal/child_process.js:827:16)
 9 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
 10 verbose pkgid Node-api-update@0.0.0
-11 verbose cwd /Users/eli/Downloads/node-auth0-sample
+11 verbose cwd /Users/eli/Documents/auth0-swift-data-app/auth0-swift-data-app-master/auth0-swift-data-app/node-auth0-sample
 12 error Darwin 15.5.0
 13 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
 14 error node v4.4.4

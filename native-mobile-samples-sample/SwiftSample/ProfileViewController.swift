@@ -63,7 +63,6 @@ class ProfileViewController: UIViewController {
         //let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue("\(token)", forHTTPHeaderField: "Token")
         //request.HTTPBody = init?(base64EncodedString id_token: String)
         return request
     }
