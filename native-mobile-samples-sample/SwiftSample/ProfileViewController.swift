@@ -25,6 +25,7 @@ import Lock
 import AFNetworking
 import Foundation
 
+
 class ProfileViewController: UIViewController {
 
     @IBOutlet var profileImage: UIImageView!
@@ -36,18 +37,49 @@ class ProfileViewController: UIViewController {
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         self.profileImage.setImageWithURL(profile.picture)
-        self.welcomeLabel.text = "Welcome \(profile.userId)"
+        self.welcomeLabel.text = "Welcome \(profile.name)"
         //print(keychain.stringForKey("id_token"));
     }
 
     @IBAction func callAPI(sender: AnyObject) {
         let request = buildAPIRequest()
-        let manager = AFHTTPSessionManager()
-        manager.dataTaskWithRequest(request) { [unowned self] _, _, error in
-            guard let _ = error else { return self.showMessage("Please download the API seed so that you can call it.") }
-            self.showMessage("We got the secured data successfully")
-        }.resume()
+//        let manager = AFHTTPSessionManager()
+//            manager.dataTaskWithRequest(request) { [unowned self] data, response, error in
+//            guard let _ = error else { return self.showMessage("Please download the API seed so that you can call it.") }
+//            self.showMessage("We got the secured data successfully")
+//            }.resume()
+//        let info = NSBundle.mainBundle().infoDictionary!
+
+//        let urlString = info["SampleAPIBaseURL"] as! String
+//        let url = NSURL(string: urlString)
+
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response, error) in
+            //print(NSString(data: data, encoding: NSUTF8StringEncoding));
+            let genre = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            dispatch_async(dispatch_get_main_queue(), {
+                // code here
+                self.welcomeLabel.text = "Favorite Genre:  \(genre!)"
+                //print(genre!)
+
+            })
+            
+           
+
+        }
+        
+        task.resume()
     }
+    
+    //            self.completionHandler(response, error: error!)
+
+//    private func completionHandler(response: AnyObject?, error: ErrorType){
+//        self.showMessage("We got the secured data successfully: \(response), error?: \(error)")
+//
+//    }
+    
+
+    
+
 
     private func showMessage(message: String) {
         let alert = UIAlertView(title: message, message: nil, delegate: nil, cancelButtonTitle: "OK")
@@ -55,15 +87,14 @@ class ProfileViewController: UIViewController {
     }
 
     private func buildAPIRequest() -> NSURLRequest {
+        
+        
         let info = NSBundle.mainBundle().infoDictionary!
         let urlString = info["SampleAPIBaseURL"] as! String
         let request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
         let keychain = MyApplication.sharedInstance.keychain
-        //let profileData:NSData! = keychain.dataForKey("profile")
-        //let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        //request.HTTPBody = init?(base64EncodedString id_token: String)
         return request
     }
 }

@@ -28,6 +28,32 @@ var options = {
 var pgp = require("pg-promise")(options);
 var db = pgp("postgresql://eli:purpleZebra@localhost:5432/mydb");
 
+
+/// THIS BREAKS ON finally function:
+// var sco; // shared connection object;
+
+// db.connect()
+//     .then(function (obj) {
+//         // obj.client = new connected Client object;
+
+//         sco = obj; // save the connection object;
+
+//         // execute all the queries you need:
+//         return sco.any('SELECT * FROM Users');
+//     })
+//     .then(function (data) {
+//         // success
+//     })
+//     .catch(function (error) {
+//         // error
+//     })
+//     .finally(function () {
+//         // release the connection, if it was successful:
+//         if (sco) {
+//             sco.done();
+//         }
+//     });
+
 // db.connect()
 //     .then(function (obj) {
 //         // obj.client = new connected Client object;
@@ -110,21 +136,26 @@ app.get('/ping', function(req, res) {
   res.send("All good. You don't need to be authenticated to call this");
 });
 
-function getData(user_id){
-	console.log("getData called");
+function getData(user_id, res){
+	console.log("getting data..");
 	//
 	db.one("SELECT fav_genre AS value FROM user_genres WHERE user_id = $1", user_id )
     .then(function (data) {
-        console.log("DATA:", data.value);
+        console.log("Favorite Genre:", data.value);
+        res.writeHead(200, {"Accept": "text/html"});
+        res.end(data.value);
     })
     .catch(function (error) {
         console.log("ERROR:", error);
     });
+
+
 };
 
 app.get('/secured/ping', function(req, res) {
-  res.status(200).send("All good. You only get this message if you're authenticated");
-  getData(req.user.sub);
+  //res.status(200).send("All good. You only get this message if you're authenticated");
+  getData(req.user.sub, res);
+  //res.end()
   //console.log(req.user.sub);
 });
 
@@ -135,37 +166,4 @@ http.createServer(app).listen(port, function (err) {
 });
 
 module.exports = app;
-
-//var results = [];
-
-
-// app.get('/ping', function(req, res) {
-
-// 	pg.connect(connectionString, function(err, client, done) {
-// 	    // Handle connection errors
-// 	    if(err) {
-// 	      done();
-// 	      console.log(err);
-// 	      return res.status(500).json({ success: false, data: err});
-// 	    }
-	    
-
-// 		var query = client.query('SELECT * FROM user_genres');
-// 		query.on('row', function(row) {
-// 		            results.push(row);
-// 		        });
-
-// 		query.on('end', function() {
-// 		            done();
-// 		            return res.json(results);
-// 		        });
-
-
-
-// 	 });
-
-//  });
-
-
-
 
