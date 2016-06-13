@@ -155,7 +155,6 @@ function getData(user_id, res){
 app.get('/secured/ping', function(req, res) {
   //res.status(200).send("All good. You only get this message if you're authenticated");
   getData(req.user.sub, res);
-  //res.end()
   //console.log(req.user.sub);
 });
 
