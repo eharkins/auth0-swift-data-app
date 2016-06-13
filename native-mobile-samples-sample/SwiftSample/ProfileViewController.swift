@@ -48,10 +48,6 @@ class ProfileViewController: UIViewController {
 //            guard let _ = error else { return self.showMessage("Please download the API seed so that you can call it.") }
 //            self.showMessage("We got the secured data successfully")
 //            }.resume()
-//        let info = NSBundle.mainBundle().infoDictionary!
-
-//        let urlString = info["SampleAPIBaseURL"] as! String
-//        let url = NSURL(string: urlString)
 
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response, error) in
             //print(NSString(data: data, encoding: NSUTF8StringEncoding));
@@ -78,9 +74,10 @@ class ProfileViewController: UIViewController {
 //    }
     
 
+    @IBAction func addSong(sender: AnyObject) {
+
+    }
     
-
-
     private func showMessage(message: String) {
         let alert = UIAlertView(title: message, message: nil, delegate: nil, cancelButtonTitle: "OK")
         alert.show()
