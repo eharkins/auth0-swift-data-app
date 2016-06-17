@@ -27,9 +27,14 @@ import Foundation
 
 
 class ProfileViewController: UIViewController {
+    
+    @IBOutlet var inputSong: UITextField!
 
     @IBOutlet var profileImage: UIImageView!
     @IBOutlet var welcomeLabel: UILabel!
+    @IBOutlet var favGenre: UILabel!
+    @IBOutlet var songList: UITableView!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +46,8 @@ class ProfileViewController: UIViewController {
         //print(keychain.stringForKey("id_token"));
     }
 
-    @IBAction func callAPI(sender: AnyObject) {
-        let request = buildAPIRequest()
+    @IBAction func getGenre(sender: AnyObject) {
+        let request = buildAPIRequest("/secured/getFavGenre", type:"GET")
 //        let manager = AFHTTPSessionManager()
 //            manager.dataTaskWithRequest(request) { [unowned self] data, response, error in
 //            guard let _ = error else { return self.showMessage("Please download the API seed so that you can call it.") }
@@ -54,8 +59,8 @@ class ProfileViewController: UIViewController {
             let genre = NSString(data: data!, encoding: NSUTF8StringEncoding)
             dispatch_async(dispatch_get_main_queue(), {
                 // code here
-                self.welcomeLabel.text = "Favorite Genre:  \(genre!)"
-                //print(genre!)
+                self.favGenre.text = "Favorite Genre:  \(genre!)"
+                print(genre!)
 
             })
             
@@ -75,7 +80,37 @@ class ProfileViewController: UIViewController {
     
 
     @IBAction func addSong(sender: AnyObject) {
+        let request = buildAPIRequest("/secured/addSong", type: "POST")
+        
+        
 
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
+            error) in
+            print(data)
+            // Check for error
+            if error != nil
+            {
+                print("error=\(error)")
+                return
+            }
+            print("HERE")
+            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+            let songs = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            dispatch_async(dispatch_get_main_queue(), {
+                // code here
+               // self.songList = "Favorite Genre:  \(songs!)"
+                //ADD CELL TO TABLE VIEW
+                self.welcomeLabel.text = "NewFavSong: \(songs!)"
+                print(songs!)
+                
+            })
+            
+            
+            
+        }
+        
+        task.resume()
+    
     }
     
     private func showMessage(message: String) {
@@ -83,12 +118,27 @@ class ProfileViewController: UIViewController {
         alert.show()
     }
 
-    private func buildAPIRequest() -> NSURLRequest {
+    private func buildAPIRequest(path: String, type: String) -> NSURLRequest {
         
         
         let info = NSBundle.mainBundle().infoDictionary!
         let urlString = info["SampleAPIBaseURL"] as! String
-        let request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+        let request = NSMutableURLRequest(URL: NSURL(string: urlString + path)!)
+        if (type == "POST")
+        {
+            //print("IF STATEMENT")
+            let song = inputSong.text
+            print(song!)
+            request.HTTPMethod = "POST"
+            //let params = ["song":"\(song)"] as Dictionary<String, String>
+            let postString = "song=\(song!)"
+
+            request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+            request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.addValue("text/html", forHTTPHeaderField: "Accept")
+            //print(request.HTTPBody)
+        }
+
         let keychain = MyApplication.sharedInstance.keychain
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
