@@ -26,7 +26,8 @@ import AFNetworking
 import Foundation
 
 
-class ProfileViewController: UIViewController {
+
+class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
     @IBOutlet var inputSong: UITextField!
 
@@ -35,15 +36,39 @@ class ProfileViewController: UIViewController {
     @IBOutlet var favGenre: UILabel!
     @IBOutlet var songList: UITableView!
     
-
+    let cellIdentifier = "CellIdentifier"
+    var songs: [String]  = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        songs = ["hello", "abcs", "happy birthday"]
         let keychain = MyApplication.sharedInstance.keychain
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         self.profileImage.setImageWithURL(profile.picture)
         self.welcomeLabel.text = "Welcome \(profile.name)"
         //print(keychain.stringForKey("id_token"));
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let numberOfRows = songs.count
+        return numberOfRows
+    }
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
+        
+        // Fetch Fruit
+        let song = songs[indexPath.row]
+        
+        // Configure Cell
+        cell.textLabel?.text = song
+        
+        return cell
     }
 
     @IBAction func getGenre(sender: AnyObject) {
@@ -81,7 +106,9 @@ class ProfileViewController: UIViewController {
 
     @IBAction func addSong(sender: AnyObject) {
         let request = buildAPIRequest("/secured/addSong", type: "POST")
-        
+        let song = inputSong.text
+        self.welcomeLabel.text = "Added Songs: \(song!)"
+
         
 
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
@@ -95,13 +122,19 @@ class ProfileViewController: UIViewController {
             }
             print("HERE")
             print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-            let songs = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            let addedSong = NSString(data: data!, encoding: NSUTF8StringEncoding)
             dispatch_async(dispatch_get_main_queue(), {
                 // code here
                // self.songList = "Favorite Genre:  \(songs!)"
                 //ADD CELL TO TABLE VIEW
-                self.welcomeLabel.text = "NewFavSong: \(songs!)"
-                print(songs!)
+                print(addedSong!)
+                self.songs.append(addedSong! as String)
+                self.songList.beginUpdates()
+                self.songList.insertRowsAtIndexPaths([
+                    NSIndexPath(forRow: self.songs.count-1, inSection: 0)
+                    ], withRowAnimation: .Automatic)
+                self.songList.endUpdates()
+                self.songList.reloadData()
                 
             })
             
