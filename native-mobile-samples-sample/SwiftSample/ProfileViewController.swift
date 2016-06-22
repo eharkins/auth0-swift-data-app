@@ -41,7 +41,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        songs = ["hello", "abcs", "happy birthday"]
+        getSongs()
         let keychain = MyApplication.sharedInstance.keychain
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
@@ -62,7 +62,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
         
-        // Fetch Fruit
+        // Fetch song
         let song = songs[indexPath.row]
         
         // Configure Cell
@@ -103,13 +103,67 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 //
 //    }
     
+       
+    private func getSongs(){
+        let request = buildAPIRequest("/secured/getSongs", type: "GET")
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {/*[unowned self]*/(data, response,
+            error) in
+            //print(data!)
+            // Check for error
+            if error != nil
+            {
+                print("error=\(error)")
+                return
+            }
+            let dataString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            print(dataString!)
+            var songArray : [String]
+            
+            do {
+                if let allSongs = try NSJSONSerialization.JSONObjectWithData(data! , options: []) as? NSDictionary{
+                    print("allsongs: ")
+                    songArray = allSongs.objectForKey("Songs") as! [String]
+                    print(songArray)
+                    self.songs = songArray
+                }
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+            
+            //let allSongs = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            dispatch_async(dispatch_get_main_queue(), {
+                // code here
+                // self.songList = "Favorite Genre:  \(songs!)"
+                //ADD CELL TO TABLE VIEW
+               // print(allSongs)
+                
+                
+                self.songList.beginUpdates()
+                for i in 0 ..< self.songs.count{
+                    self.songList.insertRowsAtIndexPaths([
+                        NSIndexPath(forRow: i, inSection: 0)
+                        ], withRowAnimation: .Automatic)
+                }
+                
+                self.songList.endUpdates()
+                self.songList.reloadData()
+                
+            })
+
+        }
+        task.resume()
+    }
 
     @IBAction func addSong(sender: AnyObject) {
-        let request = buildAPIRequest("/secured/addSong", type: "POST")
         let song = inputSong.text
         self.welcomeLabel.text = "Added Songs: \(song!)"
-
+//        dispatch_async(dispatch_get_main_queue(), {
+//
+//            self.getSongs()
+//            
+//        })
         
+        let request = buildAPIRequest("/secured/addSong", type: "POST")
 
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
