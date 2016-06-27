@@ -42,6 +42,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         getSongs()
+        getRoles()
         let keychain = MyApplication.sharedInstance.keychain
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
@@ -103,10 +104,43 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 //
 //    }
     
-       
+    private func getRoles(){
+      // ACCESS USER OBJECT THROUGH profile VARIABLE ASSIGNED ABOVE AND UPDATE WELCOME BANNER ACCORDINGLY
+    
+    }
+    
+    private func getPlays(){
+        let request = buildAPIRequest("/secured/getPlays", type: "GET")
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {/*[unowned self]*/(data, response,
+            error) in
+            //print(data!)
+            // Check for error
+            if error != nil
+            {
+                print("error=\(error)")
+                return
+            }
+            let playsString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            print(playsString!)
+            let playsInt = playsString!.intValue
+            
+            
+            
+            //let allSongs = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            dispatch_async(dispatch_get_main_queue(), {
+                // code here
+                print("Playlist plays: \(playsInt)")
+                self.welcomeLabel.text = "Playlist plays: \(playsInt)"
+
+            })
+            
+        }
+        task.resume()
+    }
+    
     private func getSongs(){
         let request = buildAPIRequest("/secured/getSongs", type: "GET")
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {/*[unowned self]*/(data, response,
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
             //print(data!)
             // Check for error
@@ -155,13 +189,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     @IBAction func addSong(sender: AnyObject) {
-        let song = inputSong.text
-        self.welcomeLabel.text = "Added Songs: \(song!)"
-//        dispatch_async(dispatch_get_main_queue(), {
-//
-//            self.getSongs()
-//            
-//        })
+        //self.welcomeLabel.text = "Added Songs: \(song!)"
+
         
         let request = buildAPIRequest("/secured/addSong", type: "POST")
 
@@ -225,6 +254,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             request.addValue("text/html", forHTTPHeaderField: "Accept")
             //print(request.HTTPBody)
         }
+       
 
         let keychain = MyApplication.sharedInstance.keychain
         let token = keychain.stringForKey("id_token")!
