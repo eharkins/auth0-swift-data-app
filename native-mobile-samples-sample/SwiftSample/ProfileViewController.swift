@@ -107,8 +107,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     private func getRoles(profile:A0UserProfile){
       // ACCESS USER OBJECT THROUGH profile VARIABLE ASSIGNED ABOVE AND UPDATE WELCOME BANNER ACCORDINGLY
-        let roles =  profile.appMetadata["roles"]!
-        
+        //let roles =  profile.appMetadata["roles"]!
+        let roles = profile.extraInfo["roles"]!
+        print(roles)
         if (roles.containsObject("playlist editor") ){
             self.welcomeLabel.text = "Welcome Editor \(profile.name)!"
         }
