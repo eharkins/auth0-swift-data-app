@@ -42,13 +42,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         getSongs()
-        getRoles()
+        
         let keychain = MyApplication.sharedInstance.keychain
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         self.profileImage.setImageWithURL(profile.picture)
-        self.welcomeLabel.text = "Welcome \(profile.name)"
-        //print(keychain.stringForKey("id_token"));
+        self.welcomeLabel.text = "Welcome \(profile.name)!"
+
+        getRoles(profile)
+        //print(keychain.stringForKey("id_token"))
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -98,14 +100,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     //            self.completionHandler(response, error: error!)
-
-//    private func completionHandler(response: AnyObject?, error: ErrorType){
-//        self.showMessage("We got the secured data successfully: \(response), error?: \(error)")
-//
-//    }
+    //    private func completionHandler(response: AnyObject?, error: ErrorType){
+    //        self.showMessage("We got the secured data successfully: \(response), error?: \(error)")
+    //
+    //    }
     
-    private func getRoles(){
+    private func getRoles(profile:A0UserProfile){
       // ACCESS USER OBJECT THROUGH profile VARIABLE ASSIGNED ABOVE AND UPDATE WELCOME BANNER ACCORDINGLY
+        let roles =  profile.appMetadata["roles"]!
+        
+        if (roles.containsObject("playlist editor") ){
+            self.welcomeLabel.text = "Welcome Editor \(profile.name)!"
+        }
+
     
     }
     
