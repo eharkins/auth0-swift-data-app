@@ -286,6 +286,7 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="1hT-ek-hBf"/>
+                                <exclude reference="g14-VV-grM"/>
                                 <exclude reference="lrf-q8-jAW"/>
                                 <exclude reference="pmc-GX-8Ow"/>
                                 <exclude reference="29D-BJ-fOc"/>
@@ -306,6 +307,7 @@
                                 <exclude reference="IZK-Fy-dyb"/>
                                 <exclude reference="KYA-cY-I0b"/>
                                 <exclude reference="NB9-Fn-O6m"/>
+                                <exclude reference="NTJ-hD-wmZ"/>
                                 <exclude reference="PaF-RH-aZN"/>
                                 <exclude reference="bzj-MG-dDR"/>
                                 <exclude reference="fIl-bS-zPH"/>

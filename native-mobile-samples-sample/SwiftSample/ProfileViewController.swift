@@ -47,7 +47,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         self.profileImage.setImageWithURL(profile.picture)
-        self.welcomeLabel.text = "Welcome \(profile.name)!"
+        
+        let displayName = profile.userMetadata["displayName"]!
+        //print(displayName)
+        
+        self.welcomeLabel.text = "Welcome \(displayName)!"
 
         getRoles(profile)
         //print(keychain.stringForKey("id_token"))
@@ -109,9 +113,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
       // ACCESS USER OBJECT THROUGH profile VARIABLE ASSIGNED ABOVE AND UPDATE WELCOME BANNER ACCORDINGLY
         //let roles =  profile.appMetadata["roles"]!
         let roles = profile.extraInfo["roles"]!
-        print(roles)
+        //print(roles)
+        let displayName = profile.userMetadata["displayName"]!
+        //print(displayName)
         if (roles.containsObject("playlist editor") ){
-            self.welcomeLabel.text = "Welcome Editor \(profile.name)!"
+            self.welcomeLabel.text = "Welcome Editor \(displayName)!"
         }
 
     
@@ -157,13 +163,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 print("error=\(error)")
                 return
             }
-            let dataString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            print(dataString!)
+            // NSString(data: data!, encoding: NSUTF8StringEncoding)
+            //print(dataString!)
             var songArray : [String]
             
             do {
                 if let allSongs = try NSJSONSerialization.JSONObjectWithData(data! , options: []) as? NSDictionary{
-                    print("allsongs: ")
+                    //print("allsongs: ")
                     songArray = allSongs.objectForKey("Songs") as! [String]
                     print(songArray)
                     self.songs = songArray
