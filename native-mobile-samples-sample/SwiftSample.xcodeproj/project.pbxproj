@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4524301D1D383A02008743C8 /* NameChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4524301C1D383A02008743C8 /* NameChangeViewController.swift */; };
 		5F224D7F19DDDF3E00C10EF2 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F224D7E19DDDF3E00C10EF2 /* ProfileViewController.swift */; };
 		5FEDAD2819DDCE4800ADDFBC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEDAD2719DDCE4800ADDFBC /* AppDelegate.swift */; };
 		5FEDAD2D19DDCE4800ADDFBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FEDAD2B19DDCE4800ADDFBC /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4524301C1D383A02008743C8 /* NameChangeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameChangeViewController.swift; sourceTree = "<group>"; };
 		57752B0CCEE840665C258FAC /* Pods-SwiftSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftSample/Pods-SwiftSample.release.xcconfig"; sourceTree = "<group>"; };
 		5F224D7E19DDDF3E00C10EF2 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5FEDAD2219DDCE4800ADDFBC /* SwiftSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +75,7 @@
 				5FEDAD4B19DDD28F00ADDFBC /* HomeViewController.swift */,
 				5FEDAD4D19DDD2F000ADDFBC /* MyApplication.swift */,
 				5F224D7E19DDDF3E00C10EF2 /* ProfileViewController.swift */,
+				4524301C1D383A02008743C8 /* NameChangeViewController.swift */,
 			);
 			path = SwiftSample;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 			files = (
 				5FEDAD2819DDCE4800ADDFBC /* AppDelegate.swift in Sources */,
 				5FEDAD4E19DDD2F000ADDFBC /* MyApplication.swift in Sources */,
+				4524301D1D383A02008743C8 /* NameChangeViewController.swift in Sources */,
 				5F224D7F19DDDF3E00C10EF2 /* ProfileViewController.swift in Sources */,
 				5FEDAD4C19DDD28F00ADDFBC /* HomeViewController.swift in Sources */,
 			);

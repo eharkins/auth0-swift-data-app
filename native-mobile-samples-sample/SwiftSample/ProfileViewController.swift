@@ -41,6 +41,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+       
         getSongs()
         
         let keychain = MyApplication.sharedInstance.keychain
@@ -51,11 +53,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let displayName = profile.userMetadata["displayName"]!
         //print(displayName)
         
-        self.welcomeLabel.text = "Welcome \(displayName)!"
+        self.welcomeLabel.text = "Welcome, \(displayName)!"
 
         getRoles(profile)
         //print(keychain.stringForKey("id_token"))
     }
+    
+    
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -77,31 +81,26 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         return cell
     }
+    
+    
 
     @IBAction func getGenre(sender: AnyObject) {
         let request = buildAPIRequest("/secured/getFavGenre", type:"GET")
-//        let manager = AFHTTPSessionManager()
-//            manager.dataTaskWithRequest(request) { [unowned self] data, response, error in
-//            guard let _ = error else { return self.showMessage("Please download the API seed so that you can call it.") }
-//            self.showMessage("We got the secured data successfully")
-//            }.resume()
+
 
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response, error) in
-            //print(NSString(data: data, encoding: NSUTF8StringEncoding));
             let genre = NSString(data: data!, encoding: NSUTF8StringEncoding)
             dispatch_async(dispatch_get_main_queue(), {
-                // code here
                 self.favGenre.text = "Favorite Genre:  \(genre!)"
                 print(genre!)
 
             })
-            
-           
 
         }
         
         task.resume()
     }
+    
     
     //            self.completionHandler(response, error: error!)
     //    private func completionHandler(response: AnyObject?, error: ErrorType){
@@ -117,7 +116,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let displayName = profile.userMetadata["displayName"]!
         //print(displayName)
         if (roles.containsObject("playlist editor") ){
-            self.welcomeLabel.text = "Welcome Editor \(displayName)!"
+            self.welcomeLabel.text = "Welcome, Editor \(displayName)!"
         }
 
     
