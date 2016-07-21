@@ -29,6 +29,7 @@ import Foundation
 
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
+    @IBOutlet var addSongButton: UIButton!
     @IBOutlet var inputSong: UITextField!
 
     @IBOutlet var profileImage: UIImageView!
@@ -176,9 +177,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 if (roles.containsObject("playlist editor") ){
                     self.welcomeLabel.text = "Welcome, Editor \(currentName)!"
+                    //self.addSongButton.enabled = true
+                    //self.addSongButton.hidden = false
+
                 }
                 else{
                     self.welcomeLabel.text = "Welcome, \(currentName)!"
+                    //self.addSongButton.enabled = false
+                    //self.addSongButton.hidden = true
                 }
             }
             
