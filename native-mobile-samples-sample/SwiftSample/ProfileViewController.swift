@@ -125,35 +125,29 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let keychain = MyApplication.sharedInstance.keychain
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
-        let user_id = profile.userId
-        //print(user_id)
-        //let postString = "user_metadata={\"displayName\": \"\(newname)\"}"
         
-        let encodedUserId =  user_id.stringByAddingPercentEncodingWithAllowedCharacters(NSMutableCharacterSet.URLQueryAllowedCharacterSet())!
-        print(encodedUserId)
-        let urlString = "https://eliharkins.auth0.com/api/v2/users/" + encodedUserId
-        print(urlString)
-        let url = NSURL(string: urlString)!
-        print(url)
+        
+        let info = NSBundle.mainBundle().infoDictionary!
+        let urlString = info["SampleAPIBaseURL"] as! String
+        //print(urlString)
+        let url = NSURL(string: urlString + "/secured/getDisplayName")!
+        //print(url)
         let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "GET"
         
-        let fields = ["user_metadata"]
+        request.HTTPMethod = "POST"
+        //let params = ["song":"\(song)"] as Dictionary<String, String>
+        let postString = "user_metadata"
+        
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        print(request.HTTPBody)
         
         
-        
-        if let bodyJSON = try? NSJSONSerialization.dataWithJSONObject(fields, options: [NSJSONWritingOptions.PrettyPrinted]){
-            //request.HTTPBody = bodyJSON // as? NSData
-            print(bodyJSON)
-            //print("THIS ONE " + request.HTTPBody!.base64EncodedStringWithOptions([]))
-            
-        }
-        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("text/html", forHTTPHeaderField: "Accept")
         
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.addValue("text/html", forHTTPHeaderField: "Accept")
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
@@ -169,23 +163,28 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             //let data_object = NSJSONSerialization.JSONObjectWithData(data!, options: [])
             if let data_object = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
             {
-                let metadata = data_object.valueForKey("user_metadata")!
-                let currentName = metadata.valueForKey("displayName")!
-                
-                let roles = profile.extraInfo["roles"]!
-                //print(roles)
-                
-                if (roles.containsObject("playlist editor") ){
-                    self.welcomeLabel.text = "Welcome, Editor \(currentName)!"
-                    //self.addSongButton.enabled = true
-                    //self.addSongButton.hidden = false
+                dispatch_async(dispatch_get_main_queue(), {
+                    // code here
+                    
+                    print(data_object)
+                    let metadata = data_object.valueForKey("user_metadata")!
+                    let currentName = metadata.valueForKey("displayName")!
+                    
+                    let roles = profile.extraInfo["roles"]!
+                    //print(roles)
+                    
+                    if (roles.containsObject("playlist editor") ){
+                        self.welcomeLabel.text = "Welcome, Editor \(currentName)!"
+                        //self.addSongButton.enabled = true
+                        //self.addSongButton.hidden = false
 
-                }
-                else{
-                    self.welcomeLabel.text = "Welcome, \(currentName)!"
-                    //self.addSongButton.enabled = false
-                    //self.addSongButton.hidden = true
-                }
+                    }
+                    else{
+                        self.welcomeLabel.text = "Welcome, \(currentName)!"
+                        //self.addSongButton.enabled = false
+                        //self.addSongButton.hidden = true
+                    }
+                })
             }
             
         }

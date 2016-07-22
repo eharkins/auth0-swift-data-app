@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSample/ProfileViewController.swift"
-            timestampString = "490748791.797322"
+            timestampString = "490841112.659635"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "359"
-            endingLineNumber = "359"
+            startingLineNumber = "358"
+            endingLineNumber = "358"
             landmarkName = "buildAPIRequest(_:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSample/ProfileViewController.swift"
-            timestampString = "490748791.797322"
+            timestampString = "490841112.659635"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308"
+            startingLineNumber = "307"
+            endingLineNumber = "307"
             landmarkName = "addSong(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSample/ProfileViewController.swift"
-            timestampString = "490748791.797322"
+            timestampString = "490841112.659635"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "285"
-            endingLineNumber = "285"
+            startingLineNumber = "284"
+            endingLineNumber = "284"
             landmarkName = "getSongs()"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,7 +74,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSample/ProfileViewController.swift"
-            timestampString = "490748791.797322"
+            timestampString = "490841112.659635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "273"
+            endingLineNumber = "273"
+            landmarkName = "getSongs()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftSample/ProfileViewController.swift"
+            timestampString = "490841112.659635"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "274"
@@ -90,27 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSample/ProfileViewController.swift"
-            timestampString = "490748791.797322"
+            timestampString = "490841112.659635"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "275"
-            endingLineNumber = "275"
-            landmarkName = "getSongs()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SwiftSample/ProfileViewController.swift"
-            timestampString = "490748791.797322"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "getSongs()"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSample/NameChangeViewController.swift"
-            timestampString = "490643710.064889"
+            timestampString = "490838642.034888"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "buildAPIRequest()"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,125 +138,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSample/NameChangeViewController.swift"
-            timestampString = "490641917.474183"
+            timestampString = "490838642.034888"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
             landmarkName = "buildAPIRequest()"
             landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SwiftSample/NameChangeViewController.swift"
-            timestampString = "490641917.474183"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "buildAPIRequest()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SwiftSample/NameChangeViewController.swift"
-            timestampString = "490641917.474183"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
-            landmarkName = "buildAPIRequest()"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SwiftSample.NameChangeViewController.(buildAPIRequest in _986C3F76D1AAE3FD7100AC6F694554B3) () -&gt; __ObjC.NSURLRequest"
-                  moduleName = "SwiftSample"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/eli/Documents/auth0-swift-data-app/auth0-swift-data-app-master/auth0-swift-data-app/native-mobile-samples-sample/SwiftSample/NameChangeViewController.swift"
-                  timestampString = "490569513.740395"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "87"
-                  endingLineNumber = "87"
-                  offsetFromSymbolStart = "3233">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SwiftSample.NameChangeViewController.(buildAPIRequest in _986C3F76D1AAE3FD7100AC6F694554B3) () -&gt; __ObjC.NSURLRequest"
-                  moduleName = "SwiftSample"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/eli/Documents/auth0-swift-data-app/auth0-swift-data-app-master/auth0-swift-data-app/native-mobile-samples-sample/SwiftSample/NameChangeViewController.swift"
-                  timestampString = "490569513.748664"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "87"
-                  endingLineNumber = "87"
-                  offsetFromSymbolStart = "3755">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SwiftSample/NameChangeViewController.swift"
-            timestampString = "490641917.474183"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "buildAPIRequest()"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SwiftSample.NameChangeViewController.(buildAPIRequest in _986C3F76D1AAE3FD7100AC6F694554B3) () -&gt; __ObjC.NSURLRequest"
-                  moduleName = "SwiftSample"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/eli/Documents/auth0-swift-data-app/auth0-swift-data-app-master/auth0-swift-data-app/native-mobile-samples-sample/SwiftSample/NameChangeViewController.swift"
-                  timestampString = "490569513.77754"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "87"
-                  endingLineNumber = "87"
-                  offsetFromSymbolStart = "3233">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SwiftSample.NameChangeViewController.(buildAPIRequest in _986C3F76D1AAE3FD7100AC6F694554B3) () -&gt; __ObjC.NSURLRequest"
-                  moduleName = "SwiftSample"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/eli/Documents/auth0-swift-data-app/auth0-swift-data-app-master/auth0-swift-data-app/native-mobile-samples-sample/SwiftSample/NameChangeViewController.swift"
-                  timestampString = "490569513.781257"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "87"
-                  endingLineNumber = "87"
-                  offsetFromSymbolStart = "3755">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

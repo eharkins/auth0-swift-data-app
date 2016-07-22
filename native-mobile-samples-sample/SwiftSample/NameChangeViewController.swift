@@ -50,58 +50,38 @@ class NameChangeViewController: UIViewController{
                 
             })
             
-            
-            
         }
-        
         task.resume()
-        
         
     }
     
     private func buildAPIRequest() -> NSURLRequest {
         let newname = (newName.text)!
         let keychain = MyApplication.sharedInstance.keychain
-        let profileData:NSData! = keychain.dataForKey("profile")
-        let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
-        let user_id = profile.userId
-        //print(user_id)
-        //let postString = "user_metadata={\"displayName\": \"\(newname)\"}"
-    
-        let encodedUserId =  user_id.stringByAddingPercentEncodingWithAllowedCharacters(NSMutableCharacterSet.URLQueryAllowedCharacterSet())!
-        //print(encodedUserId)
-        let urlString = "https://eliharkins.auth0.com/api/v2/users/" + encodedUserId
+        let info = NSBundle.mainBundle().infoDictionary!
+        let urlString = info["SampleAPIBaseURL"] as! String
         //print(urlString)
-        let url = NSURL(string: urlString)!
+        let url = NSURL(string: urlString + "/secured/changeDisplayName")!
         //print(url)
         let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "PATCH"
-        let dict = ["user_metadata": ["displayName": newname]]
-        
-        //let data = NSKeyedArchiver.archivedDataWithRootObject(dict)
-        
-        
-        
-        
-        if let bodyJSON = try? NSJSONSerialization.dataWithJSONObject(dict, options: [NSJSONWritingOptions.PrettyPrinted]){
-            request.HTTPBody = bodyJSON // as? NSData
-            //print(bodyJSON)
-            //print("THIS ONE " + request.HTTPBody!.base64EncodedStringWithOptions([]))
-
-        }
        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("text/html", forHTTPHeaderField: "Accept")
+        request.HTTPMethod = "POST"
+        //let params = ["song":"\(song)"] as Dictionary<String, String>
+        let postString = "displayName=\(newname)"
         
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        print(request.HTTPBody)
+    
+    
+    
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.addValue("text/html", forHTTPHeaderField: "Accept")
+        
         return request
     }
-    
-    
-
-
-
 
 
 }
