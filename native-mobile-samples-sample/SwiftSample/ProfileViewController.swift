@@ -114,12 +114,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         task.resume()
     }
     
-    
-    //            self.completionHandler(response, error: error!)
-    //    private func completionHandler(response: AnyObject?, error: ErrorType){
-    //        self.showMessage("We got the secured data successfully: \(response), error?: \(error)")
-    //
-    //    }
+ 
     
     private func getNameAndRole(){
         let keychain = MyApplication.sharedInstance.keychain
@@ -139,19 +134,17 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let postString = "user_metadata"
         
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
-        
         print(request.HTTPBody)
-        
-        
         
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
         request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.addValue("text/html", forHTTPHeaderField: "Accept")
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
-            print(data)
+            //print(data)
             // Check for error
             if error != nil
             {
@@ -289,44 +282,51 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     @IBAction func addSong(sender: AnyObject) {
-        //self.welcomeLabel.text = "Added Songs: \(song!)"
 
-        
-        let request = buildAPIRequest("/secured/addSong", type: "POST")
-
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
-            error) in
-            print(data)
-            // Check for error
-            if error != nil
-            {
-                print("error=\(error)")
-                return
-            }
-            print("HERE")
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-            let addedSong = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            dispatch_async(dispatch_get_main_queue(), {
-                // code here
-               // self.songList = "Favorite Genre:  \(songs!)"
-                //ADD CELL TO TABLE VIEW
-                print(addedSong!)
-                self.songs.append(addedSong! as String)
-                self.songList.beginUpdates()
-                self.songList.insertRowsAtIndexPaths([
-                    NSIndexPath(forRow: self.songs.count-1, inSection: 0)
-                    ], withRowAnimation: .Automatic)
-                self.songList.endUpdates()
-                self.songList.reloadData()
+        if(self.inputSong.text == ""){
+            showMessage("Please enter a song name")
+        }
+        else{
+            
+            let request = buildAPIRequest("/secured/addSong", type: "POST")
+            
+            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
+                error) in
+                print(data)
+                // Check for error
+                if error != nil
+                {
+                    print("error=\(error)")
+                    return
+                }
+                print("HERE")
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+                let addedSong = NSString(data: data!, encoding: NSUTF8StringEncoding)
+                dispatch_async(dispatch_get_main_queue(), {
+                    // code here
+                    // self.songList = "Favorite Genre:  \(songs!)"
+                    //ADD CELL TO TABLE VIEW
+                    print(addedSong!)
+                    self.songs.append(addedSong! as String)
+                    self.songList.beginUpdates()
+                    self.songList.insertRowsAtIndexPaths([
+                        NSIndexPath(forRow: self.songs.count-1, inSection: 0)
+                        ], withRowAnimation: .Automatic)
+                    self.songList.endUpdates()
+                    self.songList.reloadData()
+                    
+                })
                 
-            })
+                
+                
+            }
             
-            
-            
+            task.resume()
+
+            self.inputSong.text = ""
         }
         
-        task.resume()
-    
+        
     }
     
     private func showMessage(message: String) {
