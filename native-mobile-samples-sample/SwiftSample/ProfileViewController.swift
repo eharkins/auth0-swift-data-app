@@ -40,9 +40,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     let cellIdentifier = "CellIdentifier"
     var songs: [String]  = []
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         getSongs()
         
@@ -52,27 +52,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         self.profileImage.setImageWithURL(profile.picture)
         
         let displayName = profile.userMetadata["displayName"]!
-        //print(displayName)
         
         self.welcomeLabel.text = "Welcome, \(displayName)!"
-
-        
-        //print(keychain.stringForKey("id_token"))
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        print("BACK HERE")
-        
-        
         getNameAndRole()
-        
-        
     }
-    
-    
-    
-    
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -85,32 +72,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
-        
-        // Fetch song
         let song = songs[indexPath.row]
-        
-        // Configure Cell
         cell.textLabel?.text = song
-        
         return cell
     }
-    
-    
 
     @IBAction func getGenre(sender: AnyObject) {
-        let request = buildAPIRequest("/secured/getFavGenre", type:"GET")
-
-
+        let request = buildAPIRequest("/genres/getFav", type:"GET")
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response, error) in
             let genre = NSString(data: data!, encoding: NSUTF8StringEncoding)
             dispatch_async(dispatch_get_main_queue(), {
                 self.favGenre.text = "Favorite Genre:  \(genre!)"
-                print(genre!)
-
             })
-
         }
-        
         task.resume()
     }
     
@@ -121,61 +95,41 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         
-        
         let info = NSBundle.mainBundle().infoDictionary!
         let urlString = info["SampleAPIBaseURL"] as! String
-        //print(urlString)
-        let url = NSURL(string: urlString + "/secured/getDisplayName")!
-        //print(url)
+        let url = NSURL(string: urlString + "/displayName/get")!
         let request = NSMutableURLRequest(URL: url)
         
         request.HTTPMethod = "POST"
-        //let params = ["song":"\(song)"] as Dictionary<String, String>
+        
         let postString = "user_metadata"
-        
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
-        print(request.HTTPBody)
-        
         let token = keychain.stringForKey("id_token")!
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.addValue("text/html", forHTTPHeaderField: "Accept")
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
-            //print(data)
-            // Check for error
             if error != nil
             {
                 print("error=\(error)")
                 return
             }
-            print("HERE")
-            //print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-            //let data_object = NSJSONSerialization.JSONObjectWithData(data!, options: [])
             if let data_object = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
             {
                 dispatch_async(dispatch_get_main_queue(), {
-                    // code here
                     
-                    print(data_object)
-                    let metadata = data_object.valueForKey("user_metadata")!
-                    let currentName = metadata.valueForKey("displayName")!
+                   let metadata = data_object.valueForKey("user_metadata")!
+                   let currentName = metadata.valueForKey("displayName")!
+                   let roles = profile.extraInfo["roles"]!
                     
-                    let roles = profile.extraInfo["roles"]!
-                    //print(roles)
-                    
-                    if (roles.containsObject("playlist editor") ){
+                    if (roles.containsObject("playlist_editor") ){
                         self.welcomeLabel.text = "Welcome, Editor \(currentName)!"
-                        //self.addSongButton.enabled = true
-                        //self.addSongButton.hidden = false
-
                     }
                     else{
                         self.welcomeLabel.text = "Welcome, \(currentName)!"
-                        //self.addSongButton.enabled = false
-                        //self.addSongButton.hidden = true
                     }
                 })
             }
@@ -185,85 +139,46 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         task.resume()
     }
     
-    private func getRoles(profile:A0UserProfile){
-      // ACCESS USER OBJECT THROUGH profile VARIABLE ASSIGNED ABOVE AND UPDATE WELCOME BANNER ACCORDINGLY
-        //let roles =  profile.appMetadata["roles"]!
-        let roles = profile.extraInfo["roles"]!
-        //print(roles)
-        let displayName = profile.userMetadata["displayName"]!
-        //print(displayName)
-        if (roles.containsObject("playlist editor") ){
-            self.welcomeLabel.text = "Welcome, Editor \(displayName)!"
-        }
-        else{
-            self.welcomeLabel.text = "Welcome, \(displayName)!"
-        }
-
-    
-    }
-    
     private func getPlays(){
-        let request = buildAPIRequest("/secured/getPlays", type: "GET")
+        let request = buildAPIRequest("/playlists/getPlays", type: "GET")
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {/*[unowned self]*/(data, response,
             error) in
-            //print(data!)
-            // Check for error
             if error != nil
             {
                 print("error=\(error)")
                 return
             }
             let playsString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            print(playsString!)
             let playsInt = playsString!.intValue
-            
-            
-            
-            //let allSongs = NSString(data: data!, encoding: NSUTF8StringEncoding)
             dispatch_async(dispatch_get_main_queue(), {
-                // code here
-                print("Playlist plays: \(playsInt)")
                 self.welcomeLabel.text = "Playlist plays: \(playsInt)"
 
             })
-            
         }
         task.resume()
     }
     
     private func getSongs(){
-        let request = buildAPIRequest("/secured/getSongs", type: "GET")
+        let request = buildAPIRequest("/songs/get", type: "GET")
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
-            //print(data!)
-            // Check for error
             if error != nil
             {
                 print("error=\(error)")
                 return
             }
-            // NSString(data: data!, encoding: NSUTF8StringEncoding)
-            //print(dataString!)
             var songArray : [String]
             
             do {
                 if let allSongs = try NSJSONSerialization.JSONObjectWithData(data! , options: []) as? NSDictionary{
-                    //print("allsongs: ")
                     songArray = allSongs.objectForKey("Songs") as! [String]
-                    print(songArray)
                     self.songs = songArray
                 }
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
             
-            //let allSongs = NSString(data: data!, encoding: NSUTF8StringEncoding)
             dispatch_async(dispatch_get_main_queue(), {
-                // code here
-                // self.songList = "Favorite Genre:  \(songs!)"
-                //ADD CELL TO TABLE VIEW
-               // print(allSongs)
-                
                 
                 self.songList.beginUpdates()
                 for i in 0 ..< self.songs.count{
@@ -288,25 +203,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         else{
             
-            let request = buildAPIRequest("/secured/addSong", type: "POST")
+            let request = buildAPIRequest("/songs/add", type: "POST")
             
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
                 error) in
-                print(data)
-                // Check for error
+                
                 if error != nil
                 {
                     print("error=\(error)")
                     return
                 }
-                print("HERE")
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
                 let addedSong = NSString(data: data!, encoding: NSUTF8StringEncoding)
                 dispatch_async(dispatch_get_main_queue(), {
-                    // code here
-                    // self.songList = "Favorite Genre:  \(songs!)"
-                    //ADD CELL TO TABLE VIEW
-                    print(addedSong!)
                     self.songs.append(addedSong! as String)
                     self.songList.beginUpdates()
                     self.songList.insertRowsAtIndexPaths([
@@ -316,8 +224,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                     self.songList.reloadData()
                     
                 })
-                
-                
                 
             }
             
@@ -335,24 +241,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     private func buildAPIRequest(path: String, type: String) -> NSURLRequest {
-        
-        
         let info = NSBundle.mainBundle().infoDictionary!
         let urlString = info["SampleAPIBaseURL"] as! String
         let request = NSMutableURLRequest(URL: NSURL(string: urlString + path)!)
         if (type == "POST")
         {
-            //print("IF STATEMENT")
             let song = inputSong.text
-            print(song!)
             request.HTTPMethod = "POST"
-            //let params = ["song":"\(song)"] as Dictionary<String, String>
             let postString = "song=\(song!)"
 
             request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
             request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             request.addValue("text/html", forHTTPHeaderField: "Accept")
-            //print(request.HTTPBody)
         }
        
 
