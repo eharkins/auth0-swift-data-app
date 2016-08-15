@@ -11,18 +11,14 @@ import Lock
 import AFNetworking
 import Foundation
 
-
+//MARK: - NameChangeViewController
 
 class NameChangeViewController: UIViewController{
     
-    
-
     @IBOutlet var newName: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
     }
    
     @IBAction func changeName(sender: AnyObject) {
@@ -47,7 +43,6 @@ class NameChangeViewController: UIViewController{
             task.resume()
             
             newName.text = ""
-            
             
         }
         
