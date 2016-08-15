@@ -25,21 +25,25 @@ import Lock
 import AFNetworking
 import Foundation
 
-
+//MARK: - ProfileViewController
 
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
+    // MARK: - Properties
+    
+    let cellIdentifier = "CellIdentifier"
+    var songs: [String]  = []
+    
+    // MARK: Outlets
+    
     @IBOutlet var addSongButton: UIButton!
     @IBOutlet var inputSong: UITextField!
-
     @IBOutlet var profileImage: UIImageView!
     @IBOutlet var welcomeLabel: UILabel!
     @IBOutlet var favGenre: UILabel!
     @IBOutlet var songList: UITableView!
     
-    let cellIdentifier = "CellIdentifier"
-    var songs: [String]  = []
-    
+    // MARK: Overridden Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +65,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         getNameAndRole()
     }
     
+}
+
+// MARK: - Public Methods
+
+extension ProfileViewController{
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -69,15 +79,58 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let numberOfRows = songs.count
         return numberOfRows
     }
-
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
         let song = songs[indexPath.row]
         cell.textLabel?.text = song
         return cell
     }
+}
 
-    @IBAction func getGenre(sender: AnyObject) {
+// MARK: - Private Methods
+
+extension ProfileViewController{
+    
+    @IBAction private func addSong(sender: AnyObject) {
+        
+        if(self.inputSong.text == ""){
+            showMessage("Please enter a song name")
+        }
+        else{
+            
+            let request = buildAPIRequest("/songs/add", type: "POST")
+            
+            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
+                error) in
+                
+                if error != nil
+                {
+                    print("error=\(error)")
+                    return
+                }
+                let addedSong = NSString(data: data!, encoding: NSUTF8StringEncoding)
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.songs.append(addedSong! as String)
+                    self.songList.beginUpdates()
+                    self.songList.insertRowsAtIndexPaths([
+                        NSIndexPath(forRow: self.songs.count-1, inSection: 0)
+                        ], withRowAnimation: .Automatic)
+                    self.songList.endUpdates()
+                    self.songList.reloadData()
+                    
+                })
+                
+            }
+            
+            task.resume()
+            
+            self.inputSong.text = ""
+        }
+        
+    }
+    
+    @IBAction private func getGenre(sender: AnyObject) {
         let request = buildAPIRequest("/genres/getFav", type:"GET")
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response, error) in
             let genre = NSString(data: data!, encoding: NSUTF8StringEncoding)
@@ -87,8 +140,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         task.resume()
     }
-    
- 
     
     private func getNameAndRole(){
         let keychain = MyApplication.sharedInstance.keychain
@@ -121,9 +172,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             {
                 dispatch_async(dispatch_get_main_queue(), {
                     
-                   let metadata = data_object.valueForKey("user_metadata")!
-                   let currentName = metadata.valueForKey("displayName")!
-                   let roles = profile.extraInfo["roles"]!
+                    let metadata = data_object.valueForKey("user_metadata")!
+                    let currentName = metadata.valueForKey("displayName")!
+                    let roles = profile.extraInfo["roles"]!
                     
                     if (roles.containsObject("playlist_editor") ){
                         self.welcomeLabel.text = "Welcome, Editor \(currentName)!"
@@ -136,25 +187,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             
         }
         
-        task.resume()
-    }
-    
-    private func getPlays(){
-        let request = buildAPIRequest("/playlists/getPlays", type: "GET")
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {/*[unowned self]*/(data, response,
-            error) in
-            if error != nil
-            {
-                print("error=\(error)")
-                return
-            }
-            let playsString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            let playsInt = playsString!.intValue
-            dispatch_async(dispatch_get_main_queue(), {
-                self.welcomeLabel.text = "Playlist plays: \(playsInt)"
-
-            })
-        }
         task.resume()
     }
     
@@ -188,58 +220,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 }
                 
                 self.songList.endUpdates()
-                self.songList.reloadData()
+               // self.songList.reloadData()
                 
             })
-
+            
         }
         task.resume()
     }
-
-    @IBAction func addSong(sender: AnyObject) {
-
-        if(self.inputSong.text == ""){
-            showMessage("Please enter a song name")
-        }
-        else{
-            
-            let request = buildAPIRequest("/songs/add", type: "POST")
-            
-            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
-                error) in
-                
-                if error != nil
-                {
-                    print("error=\(error)")
-                    return
-                }
-                let addedSong = NSString(data: data!, encoding: NSUTF8StringEncoding)
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.songs.append(addedSong! as String)
-                    self.songList.beginUpdates()
-                    self.songList.insertRowsAtIndexPaths([
-                        NSIndexPath(forRow: self.songs.count-1, inSection: 0)
-                        ], withRowAnimation: .Automatic)
-                    self.songList.endUpdates()
-                    self.songList.reloadData()
-                    
-                })
-                
-            }
-            
-            task.resume()
-
-            self.inputSong.text = ""
-        }
-        
-        
-    }
     
-    private func showMessage(message: String) {
-        let alert = UIAlertView(title: message, message: nil, delegate: nil, cancelButtonTitle: "OK")
-        alert.show()
-    }
-
     private func buildAPIRequest(path: String, type: String) -> NSURLRequest {
         let info = NSBundle.mainBundle().infoDictionary!
         let urlString = info["SampleAPIBaseURL"] as! String
@@ -249,16 +237,21 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             let song = inputSong.text
             request.HTTPMethod = "POST"
             let postString = "song=\(song!)"
-
+            
             request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
             request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             request.addValue("text/html", forHTTPHeaderField: "Accept")
         }
-       
-
+        
+        
         let keychain = MyApplication.sharedInstance.keychain
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
+    }
+    
+    private func showMessage(message: String) {
+        let alert = UIAlertView(title: message, message: nil, delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
     }
 }
