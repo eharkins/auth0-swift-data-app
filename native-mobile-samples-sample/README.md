@@ -1,17 +1,8 @@
-# Auth0 + iOS + API Seed
+# Data Storage Scenario using Auth0 + Swift Native Mobile App Seed
 
-This is the seed project you need to use if you're going to create an app that will use Auth0, iOS with Swift and an API that you're going to be developing. That API can be in any language.
+This is the Auth0 Swift Seed project adapted to demonstrate the best practices of storing user data with Auth0. It is a native mobile app coded in Swift with a backend API created from the Auth0 NodeJS Seed project.
 
-## Configuring the example
+The scenario is a music app and the [User Data Storage Scenario](https://auth0.com/docs/tutorials/User-Data-Storage-Scenario) document demonstrates through this case the best practices of storing different types of data.
 
-You must set your Auht0 `ClientId` and `Tenant` in this sample so that it works. For that, just open the `SwiftSample/Info.plist` file and replace the `{CLIENT_ID}` and `{TENANT}` fields with your account information.
 
-## Running the example
 
-In order to run the project, you need to have `XCode` installed.
-Once you have that, just clone the project and run the following:
-
-1. `pod install`
-2. `open SwiftSample.xcworkspace`
-
-Enjoy your iOS app now :).
