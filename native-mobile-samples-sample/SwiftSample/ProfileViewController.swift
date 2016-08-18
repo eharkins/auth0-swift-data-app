@@ -1,6 +1,6 @@
 // ProfileViewController.swift
 //
-// Copyright (c) 2014 Auth0 (http://auth0.com)
+// Copyright (c) 2016 Auth0 (http://auth0.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -98,8 +98,9 @@ extension ProfileViewController{
             showMessage("Please enter a song name")
         }
         else{
-            
-            let request = buildAPIRequest("/songs/add", type: "POST")
+            let song = inputSong.text!
+            let postString = "song=\(song)"
+            let request = buildAPIPostRequest("/songs/add", postString: postString)
             
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
                 error) in
@@ -131,7 +132,7 @@ extension ProfileViewController{
     }
     
     @IBAction private func getGenre(sender: AnyObject) {
-        let request = buildAPIRequest("/genres/getFav", type:"GET")
+        let request = buildAPIRequest("/genres/getFav")
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response, error) in
             let genre = NSString(data: data!, encoding: NSUTF8StringEncoding)
             dispatch_async(dispatch_get_main_queue(), {
@@ -146,20 +147,10 @@ extension ProfileViewController{
         let profileData:NSData! = keychain.dataForKey("profile")
         let profile:A0UserProfile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as! A0UserProfile
         
-        let info = NSBundle.mainBundle().infoDictionary!
-        let urlString = info["SampleAPIBaseURL"] as! String
-        let url = NSURL(string: urlString + "/displayName/get")!
-        let request = NSMutableURLRequest(URL: url)
-        
-        request.HTTPMethod = "POST"
-        
         let postString = "user_metadata"
-        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
-        let token = keychain.stringForKey("id_token")!
         
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.addValue("text/html", forHTTPHeaderField: "Accept")
+        let request = buildAPIPostRequest("/displayName/get", postString: postString)
+        
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
@@ -191,7 +182,7 @@ extension ProfileViewController{
     }
     
     private func getSongs(){
-        let request = buildAPIRequest("/songs/get", type: "GET")
+        let request = buildAPIRequest("/songs/get")
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {[unowned self](data, response,
             error) in
             if error != nil
@@ -211,7 +202,7 @@ extension ProfileViewController{
             }
             
             dispatch_async(dispatch_get_main_queue(), {
-                
+
                 self.songList.beginUpdates()
                 for i in 0 ..< self.songs.count{
                     self.songList.insertRowsAtIndexPaths([
@@ -219,31 +210,31 @@ extension ProfileViewController{
                         ], withRowAnimation: .Automatic)
                 }
                 
-                self.songList.endUpdates()
-               // self.songList.reloadData()
-                
+                self.songList.endUpdates()                
             })
             
         }
         task.resume()
     }
     
-    private func buildAPIRequest(path: String, type: String) -> NSURLRequest {
+    private func buildAPIRequest(path: String) -> NSURLRequest {
         let info = NSBundle.mainBundle().infoDictionary!
         let urlString = info["SampleAPIBaseURL"] as! String
         let request = NSMutableURLRequest(URL: NSURL(string: urlString + path)!)
-        if (type == "POST")
-        {
-            let song = inputSong.text
-            request.HTTPMethod = "POST"
-            let postString = "song=\(song!)"
-            
-            request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
-            request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            request.addValue("text/html", forHTTPHeaderField: "Accept")
-        }
-        
-        
+        let keychain = MyApplication.sharedInstance.keychain
+        let token = keychain.stringForKey("id_token")!
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
+    }
+    
+    private func buildAPIPostRequest(path: String, postString: String) -> NSURLRequest {
+        let info = NSBundle.mainBundle().infoDictionary!
+        let urlString = info["SampleAPIBaseURL"] as! String
+        let request = NSMutableURLRequest(URL: NSURL(string: urlString + path)!)
+        request.HTTPMethod = "POST"
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.addValue("text/html", forHTTPHeaderField: "Accept")
         let keychain = MyApplication.sharedInstance.keychain
         let token = keychain.stringForKey("id_token")!
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
